@@ -1,4 +1,4 @@
-FROM golang:1.12 AS builder
+FROM golang:latest AS builder
 
 WORKDIR /go/src/github.com/hellofresh/rds_exporter
 COPY . ./
@@ -13,7 +13,6 @@ RUN apt-get update -y \
  && useradd -ms /bin/bash rds_exporter \
  && mkdir /rds_exporter \
  && chown rds_exporter:rds_exporter /rds_exporter
-
 
 COPY --from=builder /go/src/github.com/hellofresh/rds_exporter/rds_exporter /rds_exporter/rds_exporter
 COPY entry.py /

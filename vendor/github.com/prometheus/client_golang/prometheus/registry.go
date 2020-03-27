@@ -15,7 +15,6 @@ package prometheus
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"os"
 	"sort"
@@ -335,7 +334,9 @@ func (r *Registry) Register(c Collector) error {
 	}
 	// Did anything happen at all?
 	if len(newDescIDs) == 0 {
-		return errors.New("collector has no descriptors")
+		return nil
+        //  return errors.New("collector has no descriptors")
+
 	}
 	if existing, exists := r.collectorsByID[collectorID]; exists {
 		return AlreadyRegisteredError{

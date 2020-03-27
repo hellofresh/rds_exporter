@@ -8,7 +8,7 @@ import subprocess
 
 
 AWS_REGION = os.getenv('AWS_REGION', 'eu-west-1')
-ENVIRONMENT = os.getenv('ENVIRONMENT', 'staging')
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'live')
 
 client = boto3.client('rds', region_name=AWS_REGION)
 
