@@ -10,6 +10,16 @@ import subprocess
 AWS_REGION = os.getenv('AWS_REGION', 'eu-west-1')
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'staging')
 
+# These dbinstances are scraped by rds-prom-exporter
+# embedded into service's chart. 
+# No need to scrape them via kube-prometheus.
+BLACKLIST = [
+    "delivery-regions-db000-live",
+    "delivery-regions-db000-staging",
+    "subscriptions-query-service-db002-live",
+    "subscriptions-query-service-db002-staging",
+]
+
 client = boto3.client('rds', region_name=AWS_REGION)
 
 def get_db_instances(page_size=20):
@@ -37,6 +47,8 @@ def get_rds_tags(instance_arn):
 def is_applicable(instance):
     instance_name = instance['DBInstanceIdentifier']
     instance_arn = instance['DBInstanceArn']
+    if instance_name in BLACKLIST:
+        return False
     instance_tags = get_rds_tags(instance_arn)
     instance_enhanced_monitoring_interval = instance.get('MonitoringInterval', 0)
     instance_environment_tag = instance_tags.get('Environment', '')
